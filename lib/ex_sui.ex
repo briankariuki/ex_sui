@@ -1,6 +1,6 @@
 defmodule ExSui do
   @moduledoc """
-  An Elixir library to interface with the Sui blockchain using gRPC.
+  ExSui is a comprehensive Elixir library that provides a high-performance, type-safe interface for interacting with the Sui blockchain through its native gRPC API.
 
   [Sui](https://sui.io/) is a Layer 1 blockchain designed for near-instant, low-cost transactions with parallel processing and optimized scalability,
   making it ideal for DeFi, NFTs, and gaming. Sui uses [Move](https://sui.io/move), a smart contract language designed for safety and efficiency.

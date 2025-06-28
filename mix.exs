@@ -3,7 +3,7 @@ defmodule ExSui.MixProject do
 
   @name :ex_sui
   @version "0.1.0"
-  @description "An Elixir library to interface with the Sui blockchain using gRPC."
+  @description "ExSui is a comprehensive Elixir library that provides a high-performance, type-safe interface for interacting with the Sui blockchain through its native gRPC API."
   @github_url "https://github.com/briankariuki/ex_sui"
 
   def project do
