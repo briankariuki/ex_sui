@@ -1,6 +1,6 @@
 # ExSui
 
-An Elixir library to interface with the Sui blockchain using gRPC.
+An Elixir library to interface with the Sui blockchain using gRPC. This library is an alpha version.
 
 
 ## Getting Started

@@ -1,58 +1,61 @@
-defmodule ExSui.Core.Example do
-  alias Sui.Rpc.V2beta.LedgerService.Stub
-  alias Sui.Rpc.V2beta.BatchGetObjectsRequest
-  alias Sui.Rpc.V2beta.GetObjectRequest
+defmodule ExSui.Core do
+  @moduledoc """
+  Contains functions to interface with the Sui Ledger service.
+  """
+  alias ExSui.Client
+  alias Sui.Rpc.V2beta.Checkpoint
+  alias Sui.Rpc.V2beta.GetEpochRequest
+  alias Sui.Rpc.V2beta.LedgerService.Stub, as: LedgerStub
+  # alias Sui.Rpc.V2alpha.LiveDataService.Stub, as: LiveDataStub
   alias Sui.Rpc.V2beta.GetCheckpointRequest
+  alias Sui.Rpc.V2beta.GetTransactionRequest
+  alias Sui.Rpc.V2beta.Transaction
+  alias Sui.Rpc.V2beta.Epoch
 
-  def get_objects(channel) do
-    request = %BatchGetObjectsRequest{
-      requests: [
-        %GetObjectRequest{
-          object_id: "0x148a3a004f19aeea0b5df7ffc82a23935ff6cccca433e8e9c14c0f55595425e8"
-        }
-      ]
+  @doc """
+  Gets the current sui blockchain reference gas price.
+  """
+  @spec get_reference_gas_price(GetEpochRequest.t() | nil) ::
+          {:ok, Epoch.t()} | {:error, GRPC.RPCError.t()}
+  def get_reference_gas_price(request \\ nil)
+
+  def get_reference_gas_price(request) when is_nil(request) do
+    request = %GetEpochRequest{
+      read_mask: %{
+        paths: ["epoch", "reference_gas_price"]
+      }
     }
 
-    case Stub.batch_get_objects(channel, request) do
-      {:ok, reply} ->
-        IO.inspect(reply, label: "Response")
-
-      {:error, error} ->
-        IO.inspect(error, label: "Error")
-    end
+    Client.channel() |> LedgerStub.get_epoch(request)
   end
 
-  def get_object(channel) do
-    request =
-      %GetObjectRequest{
-        object_id: "0x148a3a004f19aeea0b5df7ffc82a23935ff6cccca433e8e9c14c0f55595425e8"
-      }
-
-    case Stub.get_object(channel, request) do
-      {:ok, reply} ->
-        IO.inspect(reply, label: "Response")
-
-        {:ok, reply}
-
-      {:error, error} ->
-        IO.inspect(error, label: "Error")
-
-        {:error, error}
-    end
+  def get_reference_gas_price(request) do
+    Client.channel() |> LedgerStub.get_epoch(request)
   end
 
-  def get_reference_gas_price(channel) do
-    request =
-      %GetCheckpointRequest{}
+  @doc """
+  Gets the current sui blockchain checkpoint.
+  """
+  @spec get_checkpoint(GetCheckpointRequest.t() | nil) ::
+          {:ok, Checkpoint.t()} | {:error, GRPC.RPCError.t()}
 
-    case Stub.get_epoch(channel, request) do
-      {:ok, reply} ->
-        IO.inspect(reply, label: "Response")
-        {:ok, reply}
+  def get_checkpoint(request \\ nil)
 
-      {:error, error} ->
-        IO.inspect(error, label: "Error")
-        {:error, error}
-    end
+  def get_checkpoint(request) when is_nil(request) do
+    request = %GetCheckpointRequest{}
+    Client.channel() |> LedgerStub.get_checkpoint(request)
+  end
+
+  def get_checkpoint(request) do
+    Client.channel() |> LedgerStub.get_checkpoint(request)
+  end
+
+  @doc """
+  Gets a transaction's details.
+  """
+  @spec get_transaction(GetTransactionRequest.t()) ::
+          {:ok, Transaction.t()} | {:error, GRPC.RPCError.t()}
+  def get_transaction(request) do
+    Client.channel() |> LedgerStub.get_transaction(request)
   end
 end

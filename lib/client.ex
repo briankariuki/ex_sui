@@ -33,14 +33,15 @@ defmodule ExSui.Client do
     }
 
     host = "fullnode.testnet.sui.io:443"
-    Logger.debug("Connecting to Sui gRPC at #{host}")
-
     interceptors = [{GRPC.Client.Interceptors.Logger, level: :debug}]
+
+    Logger.debug("Connecting to Sui gRPC at #{host}")
 
     case GRPC.Stub.connect(host,
            adapter: GRPC.Client.Adapters.Gun,
            cred: cred,
            interceptors: interceptors
+           #  headers: headers
          ) do
       {:ok, channel} ->
         state = %__MODULE__{
@@ -50,8 +51,6 @@ defmodule ExSui.Client do
         }
 
         Logger.debug("Connected to Sui gRPC at #{host}")
-
-        IO.inspect(channel)
 
         {:noreply, state}
 
