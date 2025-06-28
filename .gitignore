@@ -1,6 +1,8 @@
 # The directory Mix will write compiled artifacts to.
 /_build/
 
+/.elixir_ls/
+
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 
@@ -21,3 +23,7 @@ ex_sui-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+sui/
+!protos/sui
+!lib/generated/sui

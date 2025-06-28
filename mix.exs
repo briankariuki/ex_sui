@@ -5,7 +5,7 @@ defmodule ExSui.MixProject do
     [
       app: :ex_sui,
       version: "0.1.0",
-      elixir: "~> 1.18",
+      elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -22,8 +22,10 @@ defmodule ExSui.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:protobuf, "~> 0.14.1"},
-      {:jason, "~> 1.4"}
+      # {:protobuf, "~> 0.14.1"},
+      {:protobuf, git: "https://github.com/elixir-protobuf/protobuf.git", override: true},
+      {:jason, "~> 1.4"},
+      {:grpc, "~> 0.10"}
     ]
   end
 end
