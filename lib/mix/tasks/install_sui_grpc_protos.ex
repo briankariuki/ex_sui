@@ -36,10 +36,19 @@ defmodule Mix.Tasks.ExSui.InstallSuiGrpcProtos do
   end
 
   defp compile_proto_files_to_elixir() do
-    proto_files = Path.wildcard("./protos/sui/rpc/v2beta2/*.proto")
+    alpha_proto_files = Path.wildcard("./protos/sui/rpc/v2alpha/*.proto")
+    beta_proto_files = Path.wildcard("./protos/sui/rpc/v2beta/*.proto")
     google_files = Path.wildcard("./protos/google/rpc/*.proto")
-    Logger.info("[#{__MODULE__}] Found Sui #{Enum.count(proto_files)} proto files")
-    Logger.info("[#{__MODULE__}] Found Google #{Enum.count(google_files)} proto files")
+
+    Logger.info(
+      "[#{__MODULE__}] Found Sui #{Enum.count(alpha_proto_files)} protobuf alpha version files"
+    )
+
+    Logger.info(
+      "[#{__MODULE__}] Found Sui #{Enum.count(beta_proto_files)} protobuf beta version files"
+    )
+
+    Logger.info("[#{__MODULE__}] Found Google #{Enum.count(google_files)} protobuf files")
 
     case maybe_folder_exists?("./lib/generated") do
       true ->
@@ -58,7 +67,7 @@ defmodule Mix.Tasks.ExSui.InstallSuiGrpcProtos do
         "--proto_path=./protos",
         "--proto_path=./protos/google",
         "--proto_path=./protos/sui"
-      ] ++ proto_files ++ google_files
+      ] ++ alpha_proto_files ++ beta_proto_files ++ google_files
     )
   end
 

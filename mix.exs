@@ -25,7 +25,8 @@ defmodule ExSui.MixProject do
       # {:protobuf, "~> 0.14.1"},
       {:protobuf, git: "https://github.com/elixir-protobuf/protobuf.git", override: true},
       {:jason, "~> 1.4"},
-      {:grpc, "~> 0.10"}
+      {:grpc, "~> 0.10"},
+      {:castore, "~> 1.0"}
     ]
   end
 end
