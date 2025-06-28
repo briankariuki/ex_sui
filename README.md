@@ -1,6 +1,7 @@
 # ExSui
 
-ExSui is a comprehensive Elixir library that provides a high-performance, type-safe interface for interacting with the Sui blockchain through its native gRPC API. This library is a work in progress.
+ExSui is a comprehensive Elixir library that provides a high-performance, type-safe interface for interacting with the 
+[Sui](https://sui.io/) blockchain through its native [gRPC API](https://docs.sui.io/concepts/grpc-overview). This library is a work in progress.
 
 [Sui](https://sui.io/) is a Layer 1 blockchain designed for near-instant, low-cost transactions with parallel processing and optimized scalability, making it ideal for DeFi, NFTs, and gaming. Sui uses [Move](https://sui.io/move), a smart contract language designed for safety and efficiency. Unlike traditional smart contract languages like Solidity, Move is built with security in mind, minimizing common vulnerabilities such as reentrancy attacks and ensuring better resource management.
 
