@@ -1,6 +1,11 @@
 defmodule ExSui do
   @moduledoc """
   An Elixir library to interface with the Sui blockchain using gRPC.
+
+  [Sui](https://sui.io/) is a Layer 1 blockchain designed for near-instant, low-cost transactions with parallel processing and optimized scalability,
+  making it ideal for DeFi, NFTs, and gaming. Sui uses [Move](https://sui.io/move), a smart contract language designed for safety and efficiency.
+  Unlike traditional smart contract languages like Solidity, Move is built with security in mind, minimizing common
+  vulnerabilities such as reentrancy attacks and ensuring better resource management.
   """
 
   @doc """
