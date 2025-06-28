@@ -19,9 +19,9 @@ end
 ```
 
 ## Usage
-In iex you can access base methods in the ExSui module. For example,
+In iex you can access base methods in the `ExSui` module. For example,
 
-Get a transaction's details
+Getting a transaction's details
 
 ```elixir
 iex> transaction = %Sui.Rpc.V2beta.GetTransactionRequest{digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ", read_mask: %{paths: ["digest", "signatures", "events", "transaction"]}}
@@ -72,6 +72,52 @@ iex> ExSui.get_transaction(transaction)
    ...
  }}
 
+```
+
+Getting the current checkpoint details
+```elixir
+iex> request = %Sui.Rpc.V2beta.GetCheckpointRequest{read_mask: %{paths: ["summary", "digest", "sequence_number"]}}
+iex> ExSui.get_checkpoint(request)
+{:ok,
+ %Sui.Rpc.V2beta.Checkpoint{
+   sequence_number: 213034443,
+   digest: "Bf1DgoFuknnAjd5SC1h3Ve6aAhGxvmpuh1gGDAakWGUk",
+   summary: %Sui.Rpc.V2beta.CheckpointSummary{
+     bcs: %Sui.Rpc.V2beta.Bcs{
+       name: "CheckpointSummary",
+       value: <<11, 3, 0, 0, 0, 0, 0, 0, 203, 165, 178, 12, 0, 0, 0, 0, 62, 47,
+         10, 156, 0, 0, 0, 0, 32, 78, 75, 57, 28, 43, 235, 46, 138, 117, 73, 59,
+         122, 171, 84, 119, 79, 93, ...>>,
+       __unknown_fields__: []
+     },
+     digest: "Bf1DgoFuknnAjd5SC1h3Ve6aAhGxvmpuh1gGDAakWGUk",
+     epoch: 779,
+     sequence_number: 213034443,
+     total_network_transactions: 2617913150,
+     content_digest: "6GdL2k3QWfN4eicvgTEo55FfMH3QK1TRoLDoRfyN45KE",
+     previous_digest: "Aqkj4bSHRoT83MjjcsxSvpMqf9qZc3dFq8xAVFekad6j",
+     epoch_rolling_gas_cost_summary: %Sui.Rpc.V2beta.GasCostSummary{
+       computation_cost: 1115817221792,
+       storage_cost: 9846684282800,
+       storage_rebate: 8752065218424,
+       non_refundable_storage_fee: 88404699176,
+       __unknown_fields__: []
+     },
+     timestamp: %Google.Protobuf.Timestamp{
+       seconds: 1751141311,
+       nanos: 898000000,
+       __unknown_fields__: []
+     },
+     commitments: [],
+     end_of_epoch_data: nil,
+     version_specific_data: <<0, 1, 138, 102, 2, 0, 0, 0, 0, 0>>,
+     __unknown_fields__: []
+   },
+   signature: nil,
+   contents: nil,
+   transactions: [],
+   __unknown_fields__: []
+ }}
 ```
 
 
