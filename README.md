@@ -25,7 +25,7 @@ Get a transaction's details
 ```elixir
 iex> transaction = %Sui.Rpc.V2beta.GetTransactionRequest{digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ", read_mask: %{paths: ["digest", "signatures", "events", "transaction"]}}
 
-iex> ExSui.Core.get_transaction(transaction)
+iex> ExSui.get_transaction(transaction)
 {:ok,
  %Sui.Rpc.V2beta.ExecutedTransaction{
    digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ",
