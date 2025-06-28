@@ -22,7 +22,15 @@ defmodule ExSui.Core do
   def get_reference_gas_price(request) when is_nil(request) do
     request = %GetEpochRequest{
       read_mask: %{
-        paths: ["epoch", "reference_gas_price"]
+        paths: [
+          "epoch",
+          "reference_gas_price",
+          "first_checkpoint",
+          "last_checkpoint",
+          "start",
+          "end",
+          "system_state"
+        ]
       }
     }
 
@@ -42,7 +50,10 @@ defmodule ExSui.Core do
   def get_checkpoint(request \\ nil)
 
   def get_checkpoint(request) when is_nil(request) do
-    request = %GetCheckpointRequest{}
+    request = %GetCheckpointRequest{
+      read_mask: %{paths: ["summary", "digest", "sequence_number"]}
+    }
+
     Client.channel() |> LedgerStub.get_checkpoint(request)
   end
 
