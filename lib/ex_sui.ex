@@ -8,6 +8,11 @@ defmodule ExSui do
   vulnerabilities such as reentrancy attacks and ensuring better resource management.
   """
 
+  alias Sui.Rpc.V2beta.Checkpoint
+  alias Sui.Rpc.V2beta.GetCheckpointRequest
+  alias Sui.Rpc.V2beta.GetTransactionRequest
+  alias Sui.Rpc.V2beta.Transaction
+
   @doc """
   Gets the current Sui blockchain checkpoint.
 
@@ -25,6 +30,8 @@ defmodule ExSui do
         }}
 
   """
+  @spec get_checkpoint() ::
+          {:ok, Checkpoint.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_checkpoint, to: ExSui.Core
 
   @doc """
@@ -43,17 +50,19 @@ defmodule ExSui do
           __unknown_fields__: []
         }}
   """
+  @spec get_checkpoint(GetCheckpointRequest.t()) ::
+          {:ok, Checkpoint.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_checkpoint(request), to: ExSui.Core
 
   @doc """
   Gets a transaction details.
 
   ## Examples
-      iex> transaction = %Sui.Rpc.V2beta.GetTransactionRequest{digest: "3CadAYpBgYmgDVHWrKYne2V2bfN3ZkXfELVsBtoe7jHq", read_mask: %{paths: ["signatures", "events", "transaction"]}}
+      iex> transaction = %Sui.Rpc.V2beta.GetTransactionRequest{digest: "3CadAYpBgYmgDVHWrKYne2V2bfN3ZkXfELVsBtoe7jHq", read_mask: %{paths: ["digest", "signatures", "events", "transaction"]}}
       iex> ExSui.get_transaction(transaction)
       {:ok,
         %Sui.Rpc.V2beta.ExecutedTransaction{
-          digest: nil,
+          digest: "3CadAYpBgYmgDVHWrKYne2V2bfN3ZkXfELVsBtoe7jHq",
           transaction: %Sui.Rpc.V2beta.Transaction{
             bcs: %Sui.Rpc.V2beta.Bcs{
               name: "TransactionData",
@@ -96,5 +105,7 @@ defmodule ExSui do
           ...
         }}
   """
+  @spec get_transaction(GetTransactionRequest.t()) ::
+          {:ok, Transaction.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_transaction(request), to: ExSui.Core
 end
