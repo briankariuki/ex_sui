@@ -1,8 +1,8 @@
 # ExSui
 
-**TODO: Add description**
+An Elixir library to interface with the Sui blockchain using gRPC.
 
-## Installation
+## Getting Started
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `ex_sui` to your list of dependencies in `mix.exs`:
