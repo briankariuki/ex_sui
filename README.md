@@ -12,7 +12,7 @@ by adding `ex_sui` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_sui, "~> 0.1.0"}
+    {:ex_sui, git: "https://github.com/briankariuki/ex_sui.git"}
   ]
 end
 ```
