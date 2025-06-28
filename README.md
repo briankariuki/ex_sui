@@ -17,6 +17,62 @@ def deps do
 end
 ```
 
+## Usage
+In iex you can access base methods in the ExSui module. For example,
+
+Get a transaction's details
+
+```elixir
+iex> transaction = %Sui.Rpc.V2beta.GetTransactionRequest{digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ", read_mask: %{paths: ["digest", "signatures", "events", "transaction"]}}
+
+iex> ExSui.Core.get_transaction(transaction)
+{:ok,
+ %Sui.Rpc.V2beta.ExecutedTransaction{
+   digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ",
+   transaction: %Sui.Rpc.V2beta.Transaction{
+     bcs: %Sui.Rpc.V2beta.Bcs{
+       name: "TransactionData",
+       value: <<0, 0, 5, ...>>,
+       __unknown_fields__: []
+     },
+     digest: "sp9rx3yRjDxfTbmA4xoU5FDw5233Y1S3pVaRdg8UzyJ",
+     version: 1,
+     kind: %Sui.Rpc.V2beta.TransactionKind{
+       kind: {:programmable_transaction, ...},
+       __unknown_fields__: []
+     },
+     sender: "0x7afd2906726498dd5395dc26ec563ce22aa502200c0fa3a69aa2d30f2b382027",
+     gas_payment: %Sui.Rpc.V2beta.GasPayment{...},
+     ...
+   },
+   signatures: [
+     %Sui.Rpc.V2beta.UserSignature{
+       bcs: %Sui.Rpc.V2beta.Bcs{
+         name: "UserSignatureBytes",
+         value: <<5, ...>>,
+         __unknown_fields__: []
+       },
+       scheme: :ZKLOGIN,
+       signature: nil,
+       public_key: nil,
+       ...
+     }
+   ],
+   effects: nil,
+   events: %Sui.Rpc.V2beta.TransactionEvents{
+     bcs: %Sui.Rpc.V2beta.Bcs{name: "TransactionEvents", value: <<...>>, ...},
+     digest: "8yyjrqPFKX7WVMFkJdVCAavWaZKDmp1k6sGeBsh9db81",
+     events: [...],
+     ...
+   },
+   checkpoint: nil,
+   timestamp: nil,
+   balance_changes: [],
+   ...
+ }}
+
+```
+
 
 ## Contributing
 
