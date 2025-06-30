@@ -1,3 +1,6 @@
+> [!WARNING]
+> DO NOT USE. This is currently in development.
+
 # ExSui
 
 ExSui is a comprehensive Elixir library that provides a high-performance, type-safe interface for interacting with the 
