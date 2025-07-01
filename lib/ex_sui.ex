@@ -17,6 +17,12 @@ defmodule ExSui do
   alias Sui.Rpc.V2beta.GetTransactionRequest
   alias Sui.Rpc.V2beta.Transaction
 
+  alias Sui.Rpc.V2alpha.ListOwnedObjectsRequest
+  alias Sui.Rpc.V2alpha.ListOwnedObjectsResponse
+
+  alias Sui.Rpc.V2alpha.GetBalanceRequest
+  alias Sui.Rpc.V2alpha.GetBalanceResponse
+
   @doc """
   Gets the current Sui blockchain checkpoint.
 
@@ -57,6 +63,25 @@ defmodule ExSui do
   @spec get_checkpoint(GetCheckpointRequest.t()) ::
           {:ok, Checkpoint.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_checkpoint(request), to: ExSui.Core
+
+  @doc """
+  Gets balance of the coin type from address.
+
+  ## Examples
+      iex> ExSui.get_balance(%Sui.Rpc.V2alpha.GetBalanceRequest{owner: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330", coin_type: "0x2::sui::SUI"})
+      {:ok,
+        %Sui.Rpc.V2alpha.GetBalanceResponse{
+          balance: %Sui.Rpc.V2alpha.Balance{
+            coin_type: "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+            balance: 150000000000000000,
+            __unknown_fields__: []
+          },
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_balance(GetBalanceRequest.t()) ::
+          {:ok, GetBalanceResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_balance(request), to: ExSui.Core
 
   @doc """
   Gets a transaction details.
@@ -112,4 +137,92 @@ defmodule ExSui do
   @spec get_transaction(GetTransactionRequest.t()) ::
           {:ok, Transaction.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_transaction(request), to: ExSui.Core
+
+  @doc """
+  Gets an account owner objects.
+
+  ## Examples
+      iex> request = %Sui.Rpc.V2alpha.ListOwnedObjectsRequest{owner: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330"}
+      iex> ExSui.get_owned_objects(request)
+      {:ok,
+        %Sui.Rpc.V2alpha.ListOwnedObjectsResponse{
+          objects: [
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x5225fac8f5836743147b80522d2e4971fa7887bb0ecfc98671662bb96ee771b0",
+              version: 1,
+              digest: "FuV2siUPNCH1U8SyeDX486A6tmRcZnJVuvXz1Gr4TsBP",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x75aa43338f486abfdf627789c39dcf08557699651b565a82686c561a08d46531",
+              version: 1,
+              digest: "HnLoqj1TmQAjuf37ABbkKGc38kbD6E4sAEhhxks6hd91",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x836d214c0b6a4dd0837dfa711f80cbd45f72c29850cc85a4aedbc562182a2c1f",
+              version: 1,
+              digest: "ByZ7HtqZDUHJz95qg5WRxVTZo7WUm4fXMpsGKEo8E6or",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x89b4274c3dd54b8a6f205653ef38b44215611a635a2571b41e222fa49a0e45e5",
+              version: 1,
+              digest: "124UUCFrehvAGYVERDj4CvPmm1FWUiFwPucGP44Hdidm",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0xb260732567da7f5f7e5674c49c25071e81d396120591178ecd738fe6c23bff57",
+              version: 1,
+              digest: "2hhMU3bxvB8qUWvZQBAmidh16j9FBkVwwfBmdq6drShW",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            }
+          ],
+          next_page_token: nil,
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_owned_objects(ListOwnedObjectsRequest.t()) ::
+          {:ok, ListOwnedObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_owned_objects(request), to: ExSui.Core
 end

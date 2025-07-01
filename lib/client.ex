@@ -24,24 +24,26 @@ defmodule ExSui.Client do
 
   @impl true
   def handle_continue(:connect, state) do
-    cred = %GRPC.Credential{
-      ssl: [
-        verify: :verify_peer,
-        depth: 99,
-        cacert_file: CAStore.file_path()
-      ]
-    }
+    # cred = %GRPC.Credential{
+    #   ssl: [
+    #     verify: :verify_peer,
+    #     depth: 99,
+    #     cacert_file: CAStore.file_path()
+    #   ]
+    # }
 
-    host = "fullnode.testnet.sui.io:443"
+    # host = "fullnode.testnet.sui.io:443"
+    host = "192.168.100.101:9000"
     interceptors = [{GRPC.Client.Interceptors.Logger, level: :debug}]
+    headers = []
 
     Logger.debug("Connecting to Sui gRPC at #{host}")
 
     case GRPC.Stub.connect(host,
-           adapter: GRPC.Client.Adapters.Gun,
-           cred: cred,
-           interceptors: interceptors
-           #  headers: headers
+           adapter: GRPC.Client.Adapters.Mint,
+           #  cred: cred,
+           interceptors: interceptors,
+           headers: headers
          ) do
       {:ok, channel} ->
         state = %__MODULE__{
