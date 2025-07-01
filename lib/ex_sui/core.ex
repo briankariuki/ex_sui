@@ -30,11 +30,8 @@ defmodule ExSui.Core do
         paths: [
           "epoch",
           "reference_gas_price",
-          "first_checkpoint",
-          "last_checkpoint",
           "start",
-          "end",
-          "system_state"
+          "end"
         ]
       }
     }

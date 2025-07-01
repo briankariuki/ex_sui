@@ -35,6 +35,33 @@ defmodule ExSui do
         %Sui.Rpc.V2beta.Epoch{
           epoch: 0,
           committee: nil,
+          system_state: nil,
+          first_checkpoint: nil,
+          last_checkpoint: nil,
+          start: %Google.Protobuf.Timestamp{
+            seconds: 1751401172,
+            nanos: 821000000,
+            __unknown_fields__: []
+          },
+          end: nil,
+          reference_gas_price: 1000,
+          protocol_config: nil,
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_reference_gas_price() ::
+          {:ok, Epoch.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_reference_gas_price, to: ExSui.Core
+
+  @doc """
+  Gets the current sui blockchain reference gas price.
+
+  ## Examples
+      iex> ExSui.get_reference_gas_price(%Sui.Rpc.V2beta.GetEpochRequest%{read_mask: %{paths: [ "epoch", "reference_gas_price", "first_checkpoint", "last_checkpoint", "start", "end", "system_state"]}})
+      {:ok,
+        %Sui.Rpc.V2beta.Epoch{
+          epoch: 0,
+          committee: nil,
           system_state: %Sui.Rpc.V2beta.SystemState{
             version: 1,
             epoch: 0,
@@ -205,9 +232,9 @@ defmodule ExSui do
         }}
 
   """
-  @spec get_reference_gas_price(GetEpochRequest.t() | nil) ::
+  @spec get_reference_gas_price(GetEpochRequest.t()) ::
           {:ok, Epoch.t()} | {:error, GRPC.RPCError.t()}
-  defdelegate get_reference_gas_price(request \\ nil), to: ExSui.Core
+  defdelegate get_reference_gas_price(request), to: ExSui.Core
 
   @doc """
   Gets the current Sui blockchain checkpoint.
