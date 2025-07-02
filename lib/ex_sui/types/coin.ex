@@ -1,4 +1,4 @@
-defmodule ExSui.Types.GetCoinOptions do
+defmodule ExSui.Types.GetCoinsOptions do
   @moduledoc """
   Request options for getting address owned coins from `Sui.Rpc.V2alpha.ListOwnedObjectsRequest`
   """

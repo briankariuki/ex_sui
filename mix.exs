@@ -35,7 +35,8 @@ defmodule ExSui.MixProject do
       {:jason, "~> 1.4"},
       {:grpc, "~> 0.10"},
       {:castore, "~> 1.0"},
-      {:ex_doc, "~> 0.38", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.38", only: :dev, runtime: false},
+      {:b58, "~> 1.0.2"}
     ]
   end
 

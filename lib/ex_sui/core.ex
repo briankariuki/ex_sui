@@ -7,15 +7,34 @@ defmodule ExSui.Core do
   alias Sui.Rpc.V2beta.GetEpochRequest
   alias Sui.Rpc.V2beta.LedgerService.Stub, as: LedgerStub
   alias Sui.Rpc.V2alpha.LiveDataService.Stub, as: LiveDataStub
+  alias Sui.Rpc.V2beta.TransactionExecutionService.Stub, as: TransactionStub
   alias Sui.Rpc.V2beta.GetCheckpointRequest
   alias Sui.Rpc.V2beta.GetTransactionRequest
+  alias Sui.Rpc.V2beta.BatchGetObjectsRequest
+  alias Sui.Rpc.V2beta.BatchGetObjectsResponse
+  alias Sui.Rpc.V2beta.GetObjectRequest
   alias Sui.Rpc.V2beta.Transaction
   alias Sui.Rpc.V2beta.Epoch
-  alias ExSui.Types.GetCoinOptions
+  alias Sui.Rpc.V2beta.Object
+  alias ExSui.Types.GetCoinsOptions
+
   alias Sui.Rpc.V2alpha.ListOwnedObjectsRequest
   alias Sui.Rpc.V2alpha.ListOwnedObjectsResponse
+
+  alias Sui.Rpc.V2alpha.SimulateTransactionRequest
+  alias Sui.Rpc.V2alpha.SimulateTransactionResponse
+
   alias Sui.Rpc.V2alpha.GetBalanceRequest
   alias Sui.Rpc.V2alpha.GetBalanceResponse
+
+  alias Sui.Rpc.V2beta.ExecuteTransactionRequest
+  alias Sui.Rpc.V2beta.ExecuteTransactionResponse
+
+  alias Sui.Rpc.V2beta.GetServiceInfoRequest
+  alias Sui.Rpc.V2beta.GetServiceInfoResponse
+
+  alias Sui.Rpc.V2alpha.ListDynamicFieldsRequest
+  alias Sui.Rpc.V2alpha.ListDynamicFieldsResponse
 
   @doc """
   Gets the current sui blockchain reference gas price.
@@ -64,6 +83,24 @@ defmodule ExSui.Core do
   end
 
   @doc """
+  Gets the connected sui gRPC service information.
+  """
+  @spec get_service_info(GetServiceInfoRequest.t() | nil) ::
+          {:ok, GetServiceInfoResponse.t()} | {:error, GRPC.RPCError.t()}
+
+  def get_service_info(request \\ nil)
+
+  def get_service_info(request) when is_nil(request) do
+    request = %GetServiceInfoRequest{}
+
+    Client.channel() |> LedgerStub.get_service_info(request)
+  end
+
+  def get_service_info(request) do
+    Client.channel() |> LedgerStub.get_service_info(request)
+  end
+
+  @doc """
   Gets a transaction's details.
   """
   @spec get_transaction(GetTransactionRequest.t()) ::
@@ -73,21 +110,17 @@ defmodule ExSui.Core do
   end
 
   @doc """
-  Gets coins owned by an address.
+  Gets coins of some type owned by an address.
   """
-  @spec get_coins(GetCoinOptions.t()) ::
-          {:ok, any} | {:error, GRPC.RPCError.t()}
+  @spec get_coins(GetCoinsOptions.t()) ::
+          {:ok, ListOwnedObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
   def get_coins(options) do
-    channel = Client.channel()
-
-    case LiveDataStub.list_owned_objects(channel, %ListOwnedObjectsRequest{
-           owner: options.address
-           # object_type: "0x2::coin::Coin<#{options.coin_type}>",
-           # page_token: if(options.cursor, do: options.cursor, else: nil)
-         }) do
-      {:ok, objects} -> {:ok, objects}
-      {:error, error} -> {:error, error}
-    end
+    Client.channel()
+    |> LiveDataStub.list_owned_objects(%ListOwnedObjectsRequest{
+      owner: options.address,
+      object_type: "0x2::coin::Coin<#{options.coin_type}>",
+      page_token: if(options.cursor, do: options.cursor, else: nil)
+    })
   end
 
   @doc """
@@ -106,5 +139,50 @@ defmodule ExSui.Core do
           {:ok, ListOwnedObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
   def get_owned_objects(request) do
     Client.channel() |> LiveDataStub.list_owned_objects(request)
+  end
+
+  @doc """
+  Gets an object by its object id.
+  """
+  @spec get_object(GetObjectRequest.t()) ::
+          {:ok, Object.t()} | {:error, GRPC.RPCError.t()}
+  def get_object(request) do
+    Client.channel() |> LedgerStub.get_object(request)
+  end
+
+  @doc """
+  Gets batch objects by their object id.
+  """
+  @spec get_objects(BatchGetObjectsRequest.t()) ::
+          {:ok, BatchGetObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
+  def get_objects(request) do
+    Client.channel() |> LedgerStub.batch_get_objects(request)
+  end
+
+  @doc """
+  Simulates a transaction.
+  """
+  @spec dry_run_transaction(SimulateTransactionRequest.t()) ::
+          {:ok, SimulateTransactionResponse.t()} | {:error, GRPC.RPCError.t()}
+  def dry_run_transaction(request) do
+    Client.channel() |> LiveDataStub.simulate_transaction(request)
+  end
+
+  @doc """
+  Executes a transaction.
+  """
+  @spec execute_transaction(ExecuteTransactionRequest.t()) ::
+          {:ok, ExecuteTransactionResponse.t()} | {:error, GRPC.RPCError.t()}
+  def execute_transaction(request) do
+    Client.channel() |> TransactionStub.execute_transaction(request)
+  end
+
+  @doc """
+  Gets an object's dynamic fields
+  """
+  @spec get_dynamic_fields(ListDynamicFieldsRequest.t()) ::
+          {:ok, ListDynamicFieldsResponse.t()} | {:error, GRPC.RPCError.t()}
+  def get_dynamic_fields(request) do
+    Client.channel() |> LiveDataStub.list_dynamic_fields(request)
   end
 end

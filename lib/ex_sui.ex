@@ -12,6 +12,8 @@ defmodule ExSui do
   vulnerabilities such as reentrancy attacks and ensuring better resource management.
   """
 
+  alias ExSui.Types.GetCoinsOptions
+
   alias Sui.Rpc.V2beta.Checkpoint
   alias Sui.Rpc.V2beta.GetCheckpointRequest
   alias Sui.Rpc.V2beta.GetTransactionRequest
@@ -25,6 +27,24 @@ defmodule ExSui do
 
   alias Sui.Rpc.V2beta.Epoch
   alias Sui.Rpc.V2beta.GetEpochRequest
+
+  alias Sui.Rpc.V2beta.Object
+  alias Sui.Rpc.V2beta.GetObjectRequest
+
+  alias Sui.Rpc.V2beta.BatchGetObjectsRequest
+  alias Sui.Rpc.V2beta.BatchGetObjectsResponse
+
+  alias Sui.Rpc.V2alpha.SimulateTransactionRequest
+  alias Sui.Rpc.V2alpha.SimulateTransactionResponse
+
+  alias Sui.Rpc.V2beta.ExecuteTransactionRequest
+  alias Sui.Rpc.V2beta.ExecuteTransactionResponse
+
+  alias Sui.Rpc.V2beta.GetServiceInfoRequest
+  alias Sui.Rpc.V2beta.GetServiceInfoResponse
+
+  alias Sui.Rpc.V2alpha.ListDynamicFieldsRequest
+  alias Sui.Rpc.V2alpha.ListDynamicFieldsResponse
 
   @doc """
   Gets the current sui blockchain reference gas price.
@@ -278,6 +298,59 @@ defmodule ExSui do
   defdelegate get_checkpoint(request), to: ExSui.Core
 
   @doc """
+  Gets the service information of the connected sui gRPC service.
+
+  ## Examples
+      iex> ExSui.get_service_info()
+      {:ok,
+        %Sui.Rpc.V2beta.GetServiceInfoResponse{
+          chain_id: "65ii4jSpvGMJDpRAwiNrq8iesXiebybS9qLWHauHJLp3",
+          chain: "unknown",
+          epoch: 0,
+          checkpoint_height: 770,
+          timestamp: %Google.Protobuf.Timestamp{
+            seconds: 1751401689,
+            nanos: 535000000,
+            __unknown_fields__: []
+          },
+          lowest_available_checkpoint: 0,
+          lowest_available_checkpoint_objects: 770,
+          server_version: "sui-node/unknown",
+          __unknown_fields__: []
+        }}
+
+  """
+  @spec get_service_info() ::
+          {:ok, GetServiceInfoResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_service_info, to: ExSui.Core
+
+  @doc """
+  Gets the service information of the connected sui gRPC service
+
+  ## Examples
+      iex> ExSui.get_service_info(%Sui.Rpc.V2beta.GetCheckpointRequest{})
+      {:ok,
+        %Sui.Rpc.V2beta.GetServiceInfoResponse{
+          chain_id: "65ii4jSpvGMJDpRAwiNrq8iesXiebybS9qLWHauHJLp3",
+          chain: "unknown",
+          epoch: 0,
+          checkpoint_height: 770,
+          timestamp: %Google.Protobuf.Timestamp{
+            seconds: 1751401689,
+            nanos: 535000000,
+            __unknown_fields__: []
+          },
+          lowest_available_checkpoint: 0,
+          lowest_available_checkpoint_objects: 770,
+          server_version: "sui-node/unknown",
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_service_info(GetServiceInfoRequest.t()) ::
+          {:ok, GetServiceInfoResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_service_info(request), to: ExSui.Core
+
+  @doc """
   Gets balance of the coin type from address.
 
   ## Examples
@@ -438,4 +511,212 @@ defmodule ExSui do
   @spec get_owned_objects(ListOwnedObjectsRequest.t()) ::
           {:ok, ListOwnedObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
   defdelegate get_owned_objects(request), to: ExSui.Core
+
+  @doc """
+  Gets coins of some type owned by an address.
+
+  ## Examples
+      iex> request = %ExSui.Types.GetCoinsOptions{address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330", coin_type: "0x2::sui::SUI"}
+      iex> ExSui.get_coins(request)
+      {:ok,
+        %Sui.Rpc.V2alpha.ListOwnedObjectsResponse{
+          objects: [
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x5225fac8f5836743147b80522d2e4971fa7887bb0ecfc98671662bb96ee771b0",
+              version: 1,
+              digest: "FuV2siUPNCH1U8SyeDX486A6tmRcZnJVuvXz1Gr4TsBP",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x75aa43338f486abfdf627789c39dcf08557699651b565a82686c561a08d46531",
+              version: 1,
+              digest: "HnLoqj1TmQAjuf37ABbkKGc38kbD6E4sAEhhxks6hd91",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x836d214c0b6a4dd0837dfa711f80cbd45f72c29850cc85a4aedbc562182a2c1f",
+              version: 1,
+              digest: "ByZ7HtqZDUHJz95qg5WRxVTZo7WUm4fXMpsGKEo8E6or",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0x89b4274c3dd54b8a6f205653ef38b44215611a635a2571b41e222fa49a0e45e5",
+              version: 1,
+              digest: "124UUCFrehvAGYVERDj4CvPmm1FWUiFwPucGP44Hdidm",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            },
+            %Sui.Rpc.V2alpha.OwnedObject{
+              object_id: "0xb260732567da7f5f7e5674c49c25071e81d396120591178ecd738fe6c23bff57",
+              version: 1,
+              digest: "2hhMU3bxvB8qUWvZQBAmidh16j9FBkVwwfBmdq6drShW",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              balance: 30000000000000000,
+              __unknown_fields__: []
+            }
+          ],
+          next_page_token: nil,
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_coins(GetCoinsOptions.t()) ::
+          {:ok, ListOwnedObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_coins(request), to: ExSui.Core
+
+  @doc """
+  Gets a batch of objects by their object id.
+
+  ## Examples
+      iex> request = %Sui.Rpc.V2beta.BatchGetObjectsRequest{requests: [%{object_id: ""}], read_mask: %{paths: ["owner", "object_type", "bcs", "digest", "version", "object_id"]}}
+      iex> ExSui.get_objects(request)
+      {:ok,
+        %Sui.Rpc.V2beta.BatchGetObjectsResponse{
+          objects: [
+            %Sui.Rpc.V2beta.Object{
+              bcs: %Sui.Rpc.V2beta.Bcs{
+                name: "Object",
+                value: <<0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 40, 82, 37, 250, 200, 245,
+                  131, 103, 67, 20, 123, 128, 82, 45, 46, 73, 113, 250, 120, 135, 187,
+                  14, 207, 201, 134, 113, 102, 43, 185, 110, 231, 113, ...>>,
+                __unknown_fields__: []
+              },
+              object_id: "0x5225fac8f5836743147b80522d2e4971fa7887bb0ecfc98671662bb96ee771b0",
+              version: 1,
+              digest: "FuV2siUPNCH1U8SyeDX486A6tmRcZnJVuvXz1Gr4TsBP",
+              owner: %Sui.Rpc.V2beta.Owner{
+                kind: :ADDRESS,
+                address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+                version: nil,
+                __unknown_fields__: []
+              },
+              object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+              has_public_transfer: nil,
+              contents: nil,
+              modules: [],
+              type_origin_table: [],
+              linkage_table: [],
+              previous_transaction: nil,
+              storage_rebate: nil,
+              json: nil,
+              __unknown_fields__: []
+            }
+          ],
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_objects(BatchGetObjectsRequest.t()) ::
+          {:ok, BatchGetObjectsResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_objects(request), to: ExSui.Core
+
+  @doc """
+  Gets an object by its object id.
+
+  ## Examples
+      iex> request = %Sui.Rpc.V2beta.GetObjectRequest{object_id: "0x5225fac8f5836743147b80522d2e4971fa7887bb0ecfc98671662bb96ee771b0", read_mask: %{paths: ["owner", "object_type", "bcs", "digest", "version", "object_id"]}}
+      iex> ExSui.get_object(request)
+      {:ok,
+        %Sui.Rpc.V2beta.Object{
+          bcs: %Sui.Rpc.V2beta.Bcs{
+            name: "Object",
+            value: <<0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 40, 82, 37, 250, 200, 245, 131,
+              103, 67, 20, 123, 128, 82, 45, 46, 73, 113, 250, 120, 135, 187, 14, 207,
+              201, 134, 113, 102, 43, 185, 110, 231, 113, 176, 0, ...>>,
+            __unknown_fields__: []
+          },
+          object_id: "0x5225fac8f5836743147b80522d2e4971fa7887bb0ecfc98671662bb96ee771b0",
+          version: 1,
+          digest: "FuV2siUPNCH1U8SyeDX486A6tmRcZnJVuvXz1Gr4TsBP",
+          owner: %Sui.Rpc.V2beta.Owner{
+            kind: :ADDRESS,
+            address: "0xd7ffd0cf645b373ed9a1a055805d8eb177d8dae9de3503fb91277ae8cbdb8330",
+            version: nil,
+            __unknown_fields__: []
+          },
+          object_type: "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>",
+          has_public_transfer: nil,
+          contents: nil,
+          modules: [],
+          type_origin_table: [],
+          linkage_table: [],
+          previous_transaction: nil,
+          storage_rebate: nil,
+          json: nil,
+          __unknown_fields__: []
+        }}
+  """
+  @spec get_object(GetObjectRequest.t()) ::
+          {:ok, Object.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_object(request), to: ExSui.Core
+
+  @doc """
+  Attempts to simulate a transaction execution.
+
+  ## Examples
+      iex> transaction = %{}
+      iex> request = %Sui.Rpc.V2alpha.SimulateTransactionRequest{transaction, read_mask: %{paths: ["transaction.digest", "transaction.transaction", "transaction.effects", "transaction.signatures"]}}
+      iex> ExSui.dry_run_transaction(request)
+  """
+  @spec dry_run_transaction(SimulateTransactionRequest.t()) ::
+          {:ok, SimulateTransactionResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate dry_run_transaction(request), to: ExSui.Core
+
+  @doc """
+  Executes a transaction.
+
+  ## Examples
+      iex> transaction = %{}
+      iex> request = %Sui.Rpc.V2beta.ExecuteTransactionRequest{transaction, read_mask: %{paths: ["transaction.digest", "transaction.transaction", "transaction.effects", "transaction.signatures"]}}
+      iex> ExSui.execute_transaction(request)
+  """
+  @spec execute_transaction(ExecuteTransactionRequest.t()) ::
+          {:ok, ExecuteTransactionResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate execute_transaction(request), to: ExSui.Core
+
+  @doc """
+  Gets an object's dynamic fields.
+
+  ## Examples
+      iex> request = %Sui.Rpc.V2alpha.ListDynamicFieldsRequest{parent: ""}
+      iex> ExSui.get_dynamic_fields(request)
+  """
+  @spec get_dynamic_fields(ListDynamicFieldsRequest.t()) ::
+          {:ok, ListDynamicFieldsResponse.t()} | {:error, GRPC.RPCError.t()}
+  defdelegate get_dynamic_fields(request), to: ExSui.Core
 end
